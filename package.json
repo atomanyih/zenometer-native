@@ -10,18 +10,20 @@
   },
   "dependencies": {
     "expo": "~39.0.2",
+    "expo-location": "~9.0.0",
     "expo-status-bar": "~1.0.2",
+    "luxon": "^1.25.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-39.0.2.tar.gz",
+    "react-native-svg": "12.1.0",
     "react-native-web": "~0.13.12",
-    "suncalc": "mourner/suncalc#031c4ad3",
-    "expo-location": "~9.0.0",
-    "react-native-svg": "12.1.0"
+    "suncalc": "mourner/suncalc#031c4ad3"
   },
   "devDependencies": {
     "@testing-library/react-native": "^7.1.0",
     "@types/jest": "^26.0.15",
+    "@types/luxon": "^1.25.0",
     "@types/react": "~16.9.35",
     "@types/react-dom": "~16.9.8",
     "@types/react-native": "~0.63.2",
