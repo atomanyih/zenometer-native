@@ -19,8 +19,9 @@ const TwilightRadial = () => {
     buildArc({
       radius: 150,
       current: new Date('December 17, 1995 12:00:00'),
-      start: new Date('December 17, 1995 9:00:00'),
+      start: new Date('December 17, 1995 13:00:00'),
       end: new Date('December 17, 1995 18:00:00'),
+      bandWidth: 10,
     })
   );
 
@@ -32,11 +33,9 @@ const TwilightRadial = () => {
       ]}
     >
       <Svg viewBox={`0 0 ${width} ${height}`} style={styles.svg} width={width} height={height}>
-        <Path d="M -1 0 L 1 0" stroke="black"/>
-        <Path d="M 0 -1 L 0 1" stroke="black"/>
         <G x={width / 2} y={height / 2}>
           <Path
-            d={d} stroke="black" fill="green" stroke-width="1" fill-opacity="0.5"/>
+            d={d} stroke="black" stroke-width="1" fill-opacity="0.5"/>
         </G>
       </Svg>
       <Text>{d}</Text>

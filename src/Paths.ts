@@ -5,6 +5,12 @@ type MoveTo = {
   x: number,
   y: number,
 }
+
+type LineTo = {
+  command: 'L',
+  x: number,
+  y: number,
+}
 type ArcTo = {
   command: 'A',
   rx: number,
@@ -18,12 +24,13 @@ type ArcTo = {
 
 type PathInstruction =
   | MoveTo
+  | LineTo
   | ArcTo;
 
 const MINUTES_IN_DAY = 24 * 60
 
-export const buildArc = (options: { radius: number; current: Date; start: Date; end: Date }): PathInstruction[] => {
-  const {radius, start, end, current} = options;
+export const buildArc = (options: { radius: number; current: Date; start: Date; end: Date, bandWidth: number}): PathInstruction[] => {
+  const {radius, start, end, current, bandWidth} = options;
 
 
   const startAngle = dateToAngle(current, start);
@@ -40,6 +47,11 @@ export const buildArc = (options: { radius: number; current: Date; start: Date; 
       largeArcFlag,
       sweepFlag: true,
       x: Math.sin(endAngle) * radius, y: Math.cos(endAngle) * radius
+    },
+    {
+      command: 'L',
+      x: Math.sin(endAngle) * (radius - bandWidth),
+      y: Math.cos(endAngle) * (radius - bandWidth)
     }
   ]
 }
@@ -59,6 +71,11 @@ const moveString = (instruction : MoveTo): string => {
   return `M ${x} ${y}`;
 }
 
+const lineString = (instruction : LineTo): string => {
+  const {x, y} = instruction;
+  return `L ${x} ${y}`;
+}
+
 export const pathInstructionsToString = (instructions: PathInstruction[]): string => {
   return instructions.map((instruction) => {
     switch (instruction.command) {
@@ -66,6 +83,8 @@ export const pathInstructionsToString = (instructions: PathInstruction[]): strin
         return moveString(instruction);
       case 'A':
         return arcString(instruction);
+      case 'L':
+        return lineString(instruction);
       default:
         return assertNever(instruction);
     }
