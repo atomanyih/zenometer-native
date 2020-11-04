@@ -18,4 +18,5 @@ module.exports = {
       "tsConfig": "tsconfig.jest.json"
     }
   },
+  "setupFilesAfterEnv": ["<rootDir>/src/matchers.ts"]
 };
