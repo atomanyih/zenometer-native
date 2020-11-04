@@ -25,12 +25,9 @@ const MINUTES_IN_DAY = 24 * 60
 export const buildArc = (options: { radius: number; current: Date; start: Date; end: Date }): PathInstruction[] => {
   const {radius, start, end, current} = options;
 
-  const startDateTime = DateTime.fromJSDate(start)
-  const endDateTime = DateTime.fromJSDate(end)
-  const currentDateTime = DateTime.fromJSDate(current)
 
-  const startAngle = startDateTime.diff(currentDateTime, 'minutes').minutes / MINUTES_IN_DAY * 2 * Math.PI;
-  const endAngle = endDateTime.diff(currentDateTime, 'minutes').minutes / MINUTES_IN_DAY * 2 * Math.PI;
+  const startAngle = dateToAngle(current, start);
+  const endAngle = dateToAngle(current, end);
 
   const largeArcFlag = (endAngle - startAngle) >= Math.PI;
 
@@ -73,4 +70,11 @@ export const pathInstructionsToString = (instructions: PathInstruction[]): strin
         return assertNever(instruction);
     }
   }).join(' ')
+}
+
+export const dateToAngle = (start: Date, end: Date): number => {
+  const startDateTime = DateTime.fromJSDate(start)
+  const endDateTime = DateTime.fromJSDate(end)
+
+  return endDateTime.diff(startDateTime, 'minutes').minutes / MINUTES_IN_DAY * 2 * Math.PI;
 }

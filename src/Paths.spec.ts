@@ -1,4 +1,4 @@
-import {buildArc, pathInstructionsToString} from "./Paths";
+import {buildArc, dateToAngle, pathInstructionsToString} from "./Paths";
 
 describe('buildArc', () => {
   describe('when current time is 12PM', () => {
@@ -46,6 +46,25 @@ describe('buildArc', () => {
         ])
       });
     })
+  });
+});
+
+describe('dateToAngle', () => {
+  it('can do some examples', () => {
+    expect(dateToAngle(
+      new Date('December 17, 1995 6:00:00'),
+      new Date('December 17, 1995 18:00:00')
+    )).toBeAround(Math.PI, 3)
+
+    expect(dateToAngle(
+      new Date('December 17, 1995 12:00:00'),
+      new Date('December 17, 1995 18:00:00')
+    )).toBeAround(Math.PI/2, 3)
+
+    expect(dateToAngle(
+      new Date('December 17, 1995 12:00:00'),
+      new Date('December 17, 1995 6:00:00')
+    )).toBeAround(-Math.PI/2, 3)
   });
 });
 
