@@ -1,4 +1,4 @@
-import {buildArc} from "./Paths";
+import {buildArc, pathInstructionsToString} from "./Paths";
 
 describe('buildArc', () => {
   describe('when current time is 12PM', () => {
@@ -12,7 +12,7 @@ describe('buildArc', () => {
           end: new Date('December 17, 1995 18:00:00'),
           radius: radius
         })).toEqual([
-          {command: 'M', x: 0, y: radius},
+          {command: 'M', x: 0, y: -radius},
           {
             command: 'A',
             rx: radius, ry: radius,
@@ -46,5 +46,18 @@ describe('buildArc', () => {
         ])
       });
     })
+  });
+});
+
+describe('pathInstructionsToString', () => {
+  it('concats empty', () => {
+    expect(pathInstructionsToString([])).toEqual('');
+  });
+
+  it('concats instructions', () => {
+    expect(pathInstructionsToString([
+      {command: 'M', x: 1, y: 2},
+      {command: 'A', rx: 3, ry: 4, xAxisRotation: 10, largeArcFlag: false, sweepFlag:true,  x: 5, y: 6}
+    ])).toEqual('M 1 2 A 3 4 10 0 1 5 6');
   });
 });

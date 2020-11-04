@@ -35,7 +35,7 @@ export const buildArc = (options: { radius: number; current: Date; start: Date; 
   const largeArcFlag = (endAngle - startAngle) >= Math.PI;
 
   return [
-    {command: 'M', x: Math.sin(startAngle) * radius, y: Math.cos(startAngle) * radius}, // reversed bc measuring angle from vertical
+    {command: 'M', x: Math.sin(startAngle) * radius, y: -Math.cos(startAngle) * radius}, // reversed bc measuring angle from vertical
     {
       command: 'A',
       rx: radius, ry: radius,
@@ -45,4 +45,32 @@ export const buildArc = (options: { radius: number; current: Date; start: Date; 
       x: Math.sin(endAngle) * radius, y: Math.cos(endAngle) * radius
     }
   ]
+}
+
+function assertNever(x: never): never {
+  throw new Error("Unexpected object: " + x);
+}
+
+const arcString = (instruction : ArcTo): string => {
+  const {rx, ry, xAxisRotation, largeArcFlag, sweepFlag, x, y} = instruction;
+
+  return `A ${rx} ${ry} ${xAxisRotation} ${largeArcFlag ? 1 : 0} ${sweepFlag  ? 1 : 0} ${x} ${y}`
+}
+
+const moveString = (instruction : MoveTo): string => {
+  const {x, y} = instruction;
+  return `M ${x} ${y}`;
+}
+
+export const pathInstructionsToString = (instructions: PathInstruction[]): string => {
+  return instructions.map((instruction) => {
+    switch (instruction.command) {
+      case 'M':
+        return moveString(instruction);
+      case 'A':
+        return arcString(instruction);
+      default:
+        return assertNever(instruction);
+    }
+  }).join(' ')
 }
