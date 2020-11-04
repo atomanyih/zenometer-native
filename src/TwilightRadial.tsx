@@ -19,8 +19,8 @@ const TwilightRadial = () => {
     buildArc({
       radius: 150,
       current: new Date('December 17, 1995 12:00:00'),
-      start: new Date('December 17, 1995 13:00:00'),
-      end: new Date('December 17, 1995 18:00:00'),
+      start: new Date('December 17, 1995 11:00:00'),
+      end: new Date('December 17, 1995 16:00:00'),
       bandWidth: 10,
     })
   );

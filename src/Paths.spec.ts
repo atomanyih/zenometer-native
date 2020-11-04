@@ -73,12 +73,12 @@ describe('buildArc', () => {
             largeArcFlag: false,
             sweepFlag: true,
             x: expect.toBeAround(70.71, 2),
-            y: expect.toBeAround(70.71, 2)
+            y: expect.toBeAround(-70.71, 2)
           },
           {
             command: 'L',
             x: expect.toBeAround(70, 2),
-            y: expect.toBeAround(70, 2)
+            y: expect.toBeAround(-70, 2)
           }
         ])
       });

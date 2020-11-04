@@ -46,12 +46,12 @@ export const buildArc = (options: { radius: number; current: Date; start: Date; 
       xAxisRotation: 0,
       largeArcFlag,
       sweepFlag: true,
-      x: Math.sin(endAngle) * radius, y: Math.cos(endAngle) * radius
+      x: Math.sin(endAngle) * radius, y: -Math.cos(endAngle) * radius
     },
     {
       command: 'L',
       x: Math.sin(endAngle) * (radius - bandWidth),
-      y: Math.cos(endAngle) * (radius - bandWidth)
+      y: -Math.cos(endAngle) * (radius - bandWidth)
     }
   ]
 }
