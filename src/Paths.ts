@@ -32,12 +32,16 @@ export const buildArc = (options: { radius: number; current: Date; start: Date; 
   const startAngle = startDateTime.diff(currentDateTime, 'minutes').minutes / MINUTES_IN_DAY * 2 * Math.PI;
   const endAngle = endDateTime.diff(currentDateTime, 'minutes').minutes / MINUTES_IN_DAY * 2 * Math.PI;
 
+  const largeArcFlag = (endAngle - startAngle) >= Math.PI;
+
   return [
     {command: 'M', x: Math.sin(startAngle) * radius, y: Math.cos(startAngle) * radius}, // reversed bc measuring angle from vertical
     {
       command: 'A',
       rx: radius, ry: radius,
-      xAxisRotation: 0, largeArcFlag: false, sweepFlag: true,
+      xAxisRotation: 0,
+      largeArcFlag,
+      sweepFlag: true,
       x: Math.sin(endAngle) * radius, y: Math.cos(endAngle) * radius
     }
   ]
