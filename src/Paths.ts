@@ -11,6 +11,7 @@ type LineTo = {
   x: number,
   y: number,
 }
+
 type ArcTo = {
   command: 'A',
   rx: number,
@@ -22,10 +23,15 @@ type ArcTo = {
   y: number,
 }
 
+type ClosePath = {
+  command: 'Z',
+}
+
 type PathInstruction =
   | MoveTo
   | LineTo
-  | ArcTo;
+  | ArcTo
+  | ClosePath;
 
 const MINUTES_IN_DAY = 24 * 60
 
@@ -38,6 +44,7 @@ export const buildArc = (options: { radius: number; current: Date; start: Date; 
 
   const largeArcFlag = (endAngle - startAngle) >= Math.PI;
 
+  const innerRadius = radius - bandWidth;
   return [
     {command: 'M', x: Math.sin(startAngle) * radius, y: -Math.cos(startAngle) * radius}, // reversed bc measuring angle from vertical
     {
@@ -50,9 +57,18 @@ export const buildArc = (options: { radius: number; current: Date; start: Date; 
     },
     {
       command: 'L',
-      x: Math.sin(endAngle) * (radius - bandWidth),
-      y: -Math.cos(endAngle) * (radius - bandWidth)
-    }
+      x: Math.sin(endAngle) * innerRadius,
+      y: -Math.cos(endAngle) * innerRadius
+    },
+    {
+      command: 'A',
+      rx: innerRadius, ry: innerRadius,
+      xAxisRotation: 0,
+      largeArcFlag,
+      sweepFlag: false,
+      x: Math.sin(startAngle) * innerRadius, y: -Math.cos(startAngle) * innerRadius
+    },
+    {command: 'Z'}
   ]
 }
 
@@ -85,6 +101,8 @@ export const pathInstructionsToString = (instructions: PathInstruction[]): strin
         return arcString(instruction);
       case 'L':
         return lineString(instruction);
+      case 'Z':
+        return 'Z';
       default:
         return assertNever(instruction);
     }

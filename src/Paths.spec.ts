@@ -23,7 +23,16 @@ describe('buildArc', () => {
             sweepFlag: true,
             x: radius, y: expect.toBeAround(0, 1)
           },
-          {command: 'L', x: radius - bandWidth, y: expect.toBeAround(0, 1)}
+          {command: 'L', x: radius - bandWidth, y: expect.toBeAround(0, 1)},
+          {
+            command: 'A',
+            rx: radius-bandWidth, ry: radius-bandWidth,
+            xAxisRotation: 0,
+            largeArcFlag: false,
+            sweepFlag: false,
+            x: 0, y: -(radius - bandWidth)
+          },
+          {command: 'Z'}
         ])
       });
     });
@@ -48,7 +57,16 @@ describe('buildArc', () => {
             sweepFlag: true,
             x: radius, y: expect.toBeAround(0, 1)
           },
-          {command: 'L', x: radius - bandWidth, y: expect.toBeAround(0, 1)}
+          {command: 'L', x: radius - bandWidth, y: expect.toBeAround(0, 1)},
+          {
+            command: 'A',
+            rx: radius-bandWidth, ry: radius-bandWidth,
+            xAxisRotation: 0,
+            largeArcFlag: true,
+            sweepFlag: false,
+            x: -(radius - bandWidth), y: expect.toBeAround(0, 1)
+          },
+          {command: 'Z'}
         ])
       });
     });
@@ -79,7 +97,16 @@ describe('buildArc', () => {
             command: 'L',
             x: expect.toBeAround(70, 2),
             y: expect.toBeAround(-70, 2)
-          }
+          },
+          {
+            command: 'A',
+            rx: radius-bandWidth, ry: radius-bandWidth,
+            xAxisRotation: 0,
+            largeArcFlag: false,
+            sweepFlag: false,
+            x: 0, y: -(radius - bandWidth)
+          },
+          {command: 'Z'},
         ])
       });
     });
@@ -115,7 +142,7 @@ describe('pathInstructionsToString', () => {
       {command: 'M', x: 1, y: 2},
       {command: 'A', rx: 3, ry: 4, xAxisRotation: 10, largeArcFlag: false, sweepFlag: true, x: 5, y: 6},
       {command: 'L', x: 1, y: 2},
-
-    ])).toEqual('M 1 2 A 3 4 10 0 1 5 6 L 1 2');
+      {command: 'Z'},
+    ])).toEqual('M 1 2 A 3 4 10 0 1 5 6 L 1 2 Z');
   });
 });
