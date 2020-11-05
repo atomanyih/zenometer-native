@@ -18,5 +18,6 @@ module.exports = {
       "tsConfig": "tsconfig.jest.json"
     }
   },
+  "restoreMocks": true,
   "setupFilesAfterEnv": ["<rootDir>/src/matchers.ts"]
 };
