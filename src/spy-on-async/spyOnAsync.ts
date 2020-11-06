@@ -36,10 +36,10 @@ const createMockImplementation = <T>() => {
   };
 };
 
-export const extendJestMock = <T>() => {
+export const createAsyncMock = <T>(): AsyncMock<T> => {
   const {implementation, resolve, reject} = createMockImplementation<T>()
 
-  const fn : AsyncMock<T> = Object.assign(jest.fn(), {
+  const fn = Object.assign(jest.fn(), {
     mockResolveNext: resolve,
     mockRejectNext: reject
   });
