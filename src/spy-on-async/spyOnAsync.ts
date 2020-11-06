@@ -6,11 +6,11 @@ export interface AsyncMock<T> extends jest.Mock<Promise<T>> {
 type AsyncMockCall<T> = {
   resolve(val?: T) : Promise<T>;
   reject(val?: any): Promise<any>;
-  implementation(): Promise<T>; // call
-  resetPromise(): void; // reset
+  call(): Promise<T>; // call
+  reset(): void; // reset
 }
 
-const createMockImplementation = <T>() : AsyncMockCall<T> => {
+const createMockCall = <T>() : AsyncMockCall<T> => {
   let resolvePromise: (value?: T | PromiseLike<T>) => void;
   let rejectPromise: (reason?: any) => void;
   let promise : Promise<T>;
@@ -35,12 +35,12 @@ const createMockImplementation = <T>() : AsyncMockCall<T> => {
 
       return promise.catch(() => val);
     },
-    implementation: () => promise,
-    resetPromise
+    call: () => promise,
+    reset: resetPromise
   };
 };
 
-const multiple = <T>(createMockImplementation: <T>() => AsyncMockCall<T>) => () : AsyncMockCall<T> => {
+const multipleCalls = <T>(createMockImplementation: <T>() => AsyncMockCall<T>) => () : AsyncMockCall<T> => {
   let calls : AsyncMockCall<T>[] = []
 
   return {
@@ -60,13 +60,13 @@ const multiple = <T>(createMockImplementation: <T>() => AsyncMockCall<T>) => () 
 
       return call.reject(val);
     },
-    implementation: () => {
+    call: () => {
       const call = createMockImplementation<T>();
       calls.unshift(call)
 
-      return call.implementation()
+      return call.call()
     },
-    resetPromise: () => {
+    reset: () => {
       calls = []
     }
   }
@@ -84,31 +84,31 @@ class AsyncMocker {
   }
 
   createAsyncMock = <T>(): AsyncMock<T> => {
-    const {implementation, resolve, reject, resetPromise} = multiple<T>(createMockImplementation)()
+    const {call, resolve, reject, reset} = multipleCalls<T>(createMockCall)()
 
-    this._resetRegistry.add(resetPromise)
+    this._resetRegistry.add(reset)
 
     const fn = Object.assign(jest.fn(), {
       mockResolveNext: resolve,
       mockRejectNext: reject
     });
 
-    fn.mockImplementation(implementation)
+    fn.mockImplementation(call)
 
     return fn;
   }
 
   createAsyncMockSingleton = <T>(): AsyncMock<T> => {
-    const {implementation, resolve, reject, resetPromise} = createMockImplementation<T>()
+    const {call, resolve, reject, reset} = createMockCall<T>()
 
-    this._resetRegistry.add(resetPromise)
+    this._resetRegistry.add(reset)
 
     const fn = Object.assign(jest.fn(), {
       mockResolveNext: resolve,
       mockRejectNext: reject
     });
 
-    fn.mockImplementation(implementation)
+    fn.mockImplementation(call)
 
     return fn;
   }
