@@ -4,7 +4,7 @@ import * as React from "react";
 import useCurrentLocation, {LocationResult, LocationResultIncomplete} from "./useCurrentLocation";
 import {act, render} from "@testing-library/react-native";
 import {LocationObject, LocationPermissionResponse} from "expo-location/src/Location.types";
-import {AsyncMock} from "./spy-on-async/spyOnAsync";
+import {AsyncMock} from "./spy-on-async/";
 
 describe('useCurrentLocation', () => {
   function setup() {

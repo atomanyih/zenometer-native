@@ -3,8 +3,6 @@ export interface AsyncMock<T> extends jest.Mock<Promise<T>> {
   mockRejectNext(val?: T): Promise<any>;
 }
 
-const resetRegistry : Set<() => void> = new Set();
-
 const createMockImplementation = <T>() => {
   let resolvePromise: (value?: T | PromiseLike<T>) => void;
   let rejectPromise: (reason?: any) => void;
@@ -19,8 +17,6 @@ const createMockImplementation = <T>() => {
 
   resetPromise();
 
-  resetRegistry.add(() => {resetPromise()})
-
   return {
     resolve(val?: T) {
       resolvePromise(val);
@@ -32,23 +28,38 @@ const createMockImplementation = <T>() => {
 
       return promise.catch(() => {});
     },
-    implementation: () => promise
+    implementation: () => promise,
+    resetPromise
   };
 };
 
-export const createAsyncMock = <T>(): AsyncMock<T> => {
-  const {implementation, resolve, reject} = createMockImplementation<T>()
+class AsyncMocker {
+  private _resetRegistry:  Set<() => void>;
 
-  const fn = Object.assign(jest.fn(), {
-    mockResolveNext: resolve,
-    mockRejectNext: reject
-  });
+  constructor() {
+    this._resetRegistry = new Set();
+  }
 
-  fn.mockImplementation(implementation)
+  resetAllPromises = () => {
+    this._resetRegistry.forEach(reset => reset());
+  }
 
-  return fn;
+  createAsyncMock = <T>(): AsyncMock<T> => {
+    const {implementation, resolve, reject, resetPromise} = createMockImplementation<T>()
+
+    this._resetRegistry.add(resetPromise)
+
+    const fn = Object.assign(jest.fn(), {
+      mockResolveNext: resolve,
+      mockRejectNext: reject
+    });
+
+    fn.mockImplementation(implementation)
+
+    return fn;
+  }
 }
 
-export const resetAllPromises = () => {
-  resetRegistry.forEach(reset => reset());
-}
+const mocker = new AsyncMocker();
+
+export default mocker;

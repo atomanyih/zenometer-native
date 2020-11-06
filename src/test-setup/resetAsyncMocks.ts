@@ -1,4 +1,4 @@
-import {resetAllPromises} from "../spy-on-async/spyOnAsync";
+import {resetAllPromises} from "../spy-on-async/";
 
 beforeEach(() => {
   resetAllPromises();
