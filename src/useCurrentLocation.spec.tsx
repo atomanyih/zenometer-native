@@ -123,8 +123,6 @@ describe('useCurrentLocation', () => {
           granted: true,
           canAskAgain: true,
         })
-
-        console.log('status is granted')
       });
 
       it('calls for position', async () => {
@@ -145,8 +143,6 @@ describe('useCurrentLocation', () => {
         };
 
         beforeEach(async () => {
-          console.log('loc returned')
-
           await act(async () => {
             await (Location.getCurrentPositionAsync as AsyncMock<LocationObject>).mockResolveNext(locationObject)
           })
@@ -161,16 +157,16 @@ describe('useCurrentLocation', () => {
       });
     });
 
-    xdescribe('status is not granted', () => {
+    describe('status is not granted', () => {
       beforeEach(async () => {
-        await (Location.requestPermissionsAsync as AsyncMock<LocationPermissionResponse>).mockResolveNext({
-          status: PermissionStatus.DENIED,
-          expires: 'never',
-          granted: false,
-          canAskAgain: true,
-        })
-
-        console.log('status is not granted')
+        await act(async () => {
+          await (Location.requestPermissionsAsync as AsyncMock<LocationPermissionResponse>).mockResolveNext({
+            status: PermissionStatus.DENIED,
+            expires: 'never',
+            granted: false,
+            canAskAgain: true,
+          });
+        });
       });
 
       it('returns an error result', () => {

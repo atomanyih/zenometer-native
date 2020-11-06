@@ -19,5 +19,8 @@ module.exports = {
     }
   },
   "restoreMocks": true,
-  "setupFilesAfterEnv": ["<rootDir>/src/matchers.ts"]
+  "setupFilesAfterEnv": [
+    "<rootDir>/src/matchers.ts",
+    "<rootDir>/src/resetAsyncMocks.ts",
+  ]
 };
