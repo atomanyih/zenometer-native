@@ -1,5 +1,5 @@
 import {LocationObject, LocationPermissionResponse} from "expo-location/src/Location.types";
-import {extendJestMock} from "../src/spyOnAsync";
+import {extendJestMock} from "../src/spy-on-async/spyOnAsync";
 
 export const requestPermissionsAsync = extendJestMock<LocationPermissionResponse>();
 export const getCurrentPositionAsync = extendJestMock<LocationObject>();
