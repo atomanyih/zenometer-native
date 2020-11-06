@@ -3,9 +3,9 @@ export interface AsyncMock<T> extends jest.Mock<Promise<T>> {
   mockRejectNext(val?: T): Promise<any>;
 }
 
-const resets : Set<() => void> = new Set();
+const resetRegistry : Set<() => void> = new Set();
 
-const createAsyncMock = <T>() => {
+const createMockImplementation = <T>() => {
   let resolvePromise: (value?: T | PromiseLike<T>) => void;
   let rejectPromise: (reason?: any) => void;
   let promise : Promise<T>;
@@ -19,7 +19,7 @@ const createAsyncMock = <T>() => {
 
   resetPromise();
 
-  resets.add(() => {resetPromise()})
+  resetRegistry.add(() => {resetPromise()})
 
   return {
     resolve(val?: T) {
@@ -37,7 +37,7 @@ const createAsyncMock = <T>() => {
 };
 
 export const extendJestMock = <T>() => {
-  const {implementation, resolve, reject} = createAsyncMock<T>()
+  const {implementation, resolve, reject} = createMockImplementation<T>()
 
   const fn : AsyncMock<T> = Object.assign(jest.fn(), {
     mockResolveNext: resolve,
@@ -50,5 +50,5 @@ export const extendJestMock = <T>() => {
 }
 
 export const resetAllPromises = () => {
-  resets.forEach(reset => reset());
+  resetRegistry.forEach(reset => reset());
 }
